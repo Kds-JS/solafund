@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+// import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function Home() {
   return (
@@ -11,6 +12,8 @@ export default function Home() {
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         Please wait
       </Button>
+
+      {/* <WalletMultiButton /> */}
     </main>
   );
 }
