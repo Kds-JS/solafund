@@ -83,7 +83,7 @@ pub mod crowdfunding {
 
         campaign.total_donated += amount;
         contribution.authority = ctx.accounts.signer.key();
-        contribution.contribution_amount += amount;
+        contribution.amount += amount;
 
         if campaign.total_donated >= campaign.goal {
             campaign.donation_completed = true;
@@ -104,7 +104,7 @@ pub mod crowdfunding {
         require!(current_timestamp > campaign.end_at, Errors::CampaignNotOver);
         require!(campaign.donation_completed == false, Errors::DonationCompleted);
 
-        let amount = contribution.contribution_amount;
+        let amount = contribution.amount;
 
         campaign.sub_lamports(amount)?;
         ctx.accounts.authority.add_lamports(amount)?;
@@ -221,7 +221,7 @@ pub struct Campaign {
 
 #[account]
 pub struct Contribution {
-    pub contribution_amount: u64,
+    pub amount: u64,
     pub authority: Pubkey,
 }
 
