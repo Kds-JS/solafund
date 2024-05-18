@@ -124,10 +124,8 @@ pub mod crowdfunding {
         require!(campaign.donation_completed == true, Errors::DonationNotCompleted);
         require!(campaign.claimed == false, Errors::DonationsClaimed);
 
-        let total_donated = campaign.get_lamports();
-
-        campaign.sub_lamports(total_donated)?;
-        ctx.accounts.authority.add_lamports(total_donated)?;
+        campaign.sub_lamports(campaign.total_donated)?;
+        ctx.accounts.authority.add_lamports(campaign.total_donated)?;
 
         campaign.claimed = true;
 
