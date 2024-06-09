@@ -42,7 +42,8 @@ export default function HomePage() {
             </h1>
             <span className="max-w-[750px] text-center text-lg font-light text-foreground">
               A stunning and functional retractable sidebar for Next.js using
-              crowdfunding-solana complete with desktop and mobile responsiveness.
+              crowdfunding-solana complete with desktop and mobile
+              responsiveness.
             </span>
             <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-6">
               <Button variant="default" asChild>

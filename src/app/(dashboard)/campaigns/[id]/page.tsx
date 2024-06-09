@@ -11,9 +11,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-export default function DashboardPage() {
+export default function CampaignPage() {
   return (
-    <ContentLayout title="Dashboard">
+    <ContentLayout title="Campaign">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

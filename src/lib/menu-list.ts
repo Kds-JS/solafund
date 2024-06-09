@@ -45,19 +45,19 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: '',
-          label: 'Posts',
-          active: pathname.includes('/posts'),
+          label: 'Campaigns',
+          active: pathname.includes('/campaigns'),
           icon: SquarePen,
           submenus: [
             {
-              href: '/posts',
-              label: 'All Posts',
-              active: pathname === '/posts',
+              href: '/campaigns',
+              label: 'All Campaigns',
+              active: pathname === '/campaigns',
             },
             {
-              href: '/posts/new',
-              label: 'New Post',
-              active: pathname === '/posts/new',
+              href: '/campaigns/new',
+              label: 'New Campaign',
+              active: pathname === '/campaigns/new',
             },
           ],
         },
