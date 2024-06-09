@@ -19,8 +19,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
-const ACCEPTED_FILE_TYPES = ['image/png'];
+const MAX_FILE_SIZE = 1024 * 1024 * 5;
+const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,31 +30,35 @@ const formSchema = z.object({
     message: 'Project Description must be at least 10 characters.',
   }),
   link: z.string().url(),
-  // image: z
-  // .instanceof(File)
-  // .optional()
-  // .refine((file) => {
-  //   return !file || file.size <= MAX_UPLOAD_SIZE;
-  // }, 'File size must be less than 3MB')
-  // .refine((file) => {
-  //   return ACCEPTED_FILE_TYPES.includes(file!.type);
-  // }, 'File must be a PNG'),
-  goal: z.number().positive(),
-  duration: z.number().positive(),
+  image: z
+    .any()
+    .refine((files) => {
+      return files?.[0]?.size <= MAX_FILE_SIZE;
+    }, `Max image size is 5MB.`)
+    .refine(
+      (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[0]?.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.',
+    ),
+  goal: z.coerce.number().positive(),
+  duration: z.coerce.number().positive(),
 });
 
 export default function FormCreateCampaign() {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       description: '',
       link: '',
+      image: undefined,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    console.log(selectedImage);
   }
 
   return (
@@ -120,14 +124,22 @@ export default function FormCreateCampaign() {
                 )}
               />
 
-              {/* <FormField
+              <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Project Image</FormLabel>
                     <FormControl>
-                      <Input name='image' placeholder="Enter project link" {...field as any} type='file'/>
+                      <Input
+                        name="image"
+                        placeholder="Enter project link"
+                        type="file"
+                        onChange={(e) => {
+                          field.onChange(e.target.files);
+                          setSelectedImage(e.target.files?.[0] || null);
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>
                       This is your project image.
@@ -135,7 +147,7 @@ export default function FormCreateCampaign() {
                     <FormMessage />
                   </FormItem>
                 )}
-              /> */}
+              />
 
               <FormField
                 control={form.control}
@@ -144,7 +156,11 @@ export default function FormCreateCampaign() {
                   <FormItem>
                     <FormLabel>Funding Goal (SOL)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter project link" {...field} type='number'/>
+                      <Input
+                        placeholder="Enter project link"
+                        {...field}
+                        type="number"
+                      />
                     </FormControl>
                     <FormDescription>
                       This is your funding goal.
@@ -161,7 +177,11 @@ export default function FormCreateCampaign() {
                   <FormItem>
                     <FormLabel>Duration (Minutes)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter project link" {...field} type='number'/>
+                      <Input
+                        placeholder="Enter project link"
+                        {...field}
+                        type="number"
+                      />
                     </FormControl>
                     <FormDescription>
                       This is your funding duration.
