@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { storeFile } from '@/services/ipfs';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -56,9 +57,21 @@ export default function FormCreateCampaign() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     console.log(selectedImage);
+
+    /**
+     * Store Image to IPFS
+     */
+    // const { result, errors } = await storeFile(selectedImage!, values.name);
+    // if (errors) {
+    //   console.log(errors);
+    //   // send toast here
+    //   return;
+    // }
+    // const imageCID = result!.IpfsHash;
+    // console.log(imageCID);
   }
 
   return (
