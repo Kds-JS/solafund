@@ -15,8 +15,7 @@ export const metadata: Metadata = {
         : `http://localhost:${process.env.PORT || 3000}`,
   ),
   title: 'crowdfunding',
-  description:
-    'A crowd funding dapp built on Solana',
+  description: 'A crowd funding dapp built on Solana',
 };
 
 export default function RootLayout({
