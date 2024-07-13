@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import PlaceholderContent from '@/components/demo/placeholder-content';
 import { ContentLayout } from '@/components/admin-panel/content-layout';
 import {
   Breadcrumb,
@@ -10,10 +9,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import FormCreateCampaign from '@/components/campaigns/form-create-campaign';
 
-export default function CampaignPage() {
+export default function NewCampaignPage() {
   return (
-    <ContentLayout title="Campaign">
+    <ContentLayout title="New Campaign">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -29,11 +29,17 @@ export default function CampaignPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Campaign</BreadcrumbPage>
+            <BreadcrumbLink asChild>
+              <Link href="/dashboard/campaigns">Campaigns</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>New</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+      <FormCreateCampaign />
     </ContentLayout>
   );
 }

@@ -50,12 +50,12 @@ export function getMenuList(pathname: string): Group[] {
           icon: SquarePen,
           submenus: [
             {
-              href: '/campaigns',
+              href: '/dashboard/campaigns',
               label: 'All Campaigns',
               active: pathname === '/campaigns',
             },
             {
-              href: '/campaigns/new',
+              href: '/dashboard/campaigns/new',
               label: 'New Campaign',
               active: pathname === '/campaigns/new',
             },
