@@ -52,12 +52,12 @@ export function getMenuList(pathname: string): Group[] {
             {
               href: '/dashboard/campaigns',
               label: 'All Campaigns',
-              active: pathname === '/campaigns',
+              active: pathname === '/dashboard/campaigns',
             },
             {
               href: '/dashboard/campaigns/new',
               label: 'New Campaign',
-              active: pathname === '/campaigns/new',
+              active: pathname === '/dashboard/campaigns/new',
             },
           ],
         },
