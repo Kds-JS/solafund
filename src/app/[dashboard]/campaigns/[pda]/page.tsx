@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import PlaceholderContent from '@/components/demo/placeholder-content';
 import { ContentLayout } from '@/components/admin-panel/content-layout';
 import {
   Breadcrumb,
@@ -11,9 +10,16 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-export default function CampaignsPage() {
+import { Campaign } from './campaign';
+import { truncateAddress } from '@/utils';
+
+type PageProps = {
+  params: { pda: string };
+};
+
+export default function CampaignPage({ params: { pda } }: PageProps) {
   return (
-    <ContentLayout title="All Campaigns">
+    <ContentLayout title={`Campaign: ${truncateAddress(pda)}`}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -29,11 +35,17 @@ export default function CampaignsPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Campaigns</BreadcrumbPage>
+            <BreadcrumbLink asChild>
+              <Link href="/dashboard/campaigns">Campaigns</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{truncateAddress(pda)}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+      <Campaign pda={pda} />
     </ContentLayout>
   );
 }

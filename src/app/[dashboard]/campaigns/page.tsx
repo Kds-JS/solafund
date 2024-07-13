@@ -9,11 +9,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import FormCreateCampaign from '@/components/campaigns/form-create-campaign';
+import { CampaignList } from './campaign-list';
 
-export default function NewCampaignPage() {
+export default function CampaignsPage() {
   return (
-    <ContentLayout title="New Campaign">
+    <ContentLayout title="All Campaigns">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -29,17 +29,11 @@ export default function NewCampaignPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/campaigns">Campaigns</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>New</BreadcrumbPage>
+            <BreadcrumbPage>Campaigns</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <FormCreateCampaign />
+      <CampaignList />
     </ContentLayout>
   );
 }
