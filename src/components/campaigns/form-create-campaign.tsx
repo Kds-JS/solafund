@@ -24,8 +24,11 @@ const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Project Name must be at least 2 characters.',
+  title: z.string().min(2, {
+    message: 'Project Title must be at least 2 characters.',
+  }),
+  orgName: z.string().min(2, {
+    message: 'Organization Name must be at least 2 characters.',
   }),
   description: z.string().min(10, {
     message: 'Project Description must be at least 10 characters.',
@@ -50,7 +53,8 @@ export default function FormCreateCampaign() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      title: '',
+      orgName: '',
       description: '',
       link: '',
       image: undefined,
@@ -85,15 +89,32 @@ export default function FormCreateCampaign() {
             >
               <FormField
                 control={form.control}
-                name="name"
+                name="orgName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Name</FormLabel>
+                    <FormLabel>Organization Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter project name" {...field} />
+                      <Input placeholder="Enter organization name" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is your project name.
+                      This is your organization name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter project title" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is your project title.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
