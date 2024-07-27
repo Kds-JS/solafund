@@ -21,6 +21,8 @@ import { z } from 'zod';
 import { storeFile } from '@/services/ipfs';
 import { DateTimePicker } from '@/components/time';
 
+import { toast } from 'react-toastify';
+
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
@@ -67,8 +69,8 @@ export default function FormCreateCampaign() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
-    if (values.endDate.getTime() < values.startDate.getTime()) {
-      console.error('date range is not valide');
+    if (values.endDate.getTime() <= values.startDate.getTime()) {
+      toast.error('end date must be greater than start date');
     }
     console.log(selectedImage);
 

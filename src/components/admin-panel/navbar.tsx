@@ -1,8 +1,8 @@
 'use client';
 
 import { ModeToggle } from '@/components/mode-toggle';
-import { UserNav } from '@/components/admin-panel/user-nav';
 import { SheetMenu } from '@/components/admin-panel/sheet-menu';
+import { WalletConnectButton } from '@/components/wallets';
 
 interface NavbarProps {
   title: string;
@@ -18,7 +18,7 @@ export function Navbar({ title }: NavbarProps) {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ModeToggle />
-          <UserNav />
+          <WalletConnectButton />
         </div>
       </div>
     </header>
