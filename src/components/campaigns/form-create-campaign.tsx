@@ -19,6 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { storeFile } from '@/services/ipfs';
+import { DateTimePicker } from '@/components/time';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -43,8 +44,9 @@ const formSchema = z.object({
       (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[0]?.type),
       'Only .jpg, .jpeg, .png and .webp formats are supported.',
     ),
-  goal: z.coerce.number().positive(),
-  duration: z.coerce.number().positive(),
+  goal: z.coerce.number().gt(0),
+  startDate: z.date(),
+  endDate: z.date(),
 });
 
 export default function FormCreateCampaign() {
@@ -58,11 +60,16 @@ export default function FormCreateCampaign() {
       description: '',
       link: '',
       image: undefined,
+      goal: 1,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    if (values.endDate.getTime() < values.startDate.getTime()) {
+      console.error('date range is not valide');
+    }
     console.log(selectedImage);
 
     /**
@@ -191,7 +198,7 @@ export default function FormCreateCampaign() {
                     <FormLabel>Funding Goal (SOL)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter project link"
+                        placeholder="Enter funding goal"
                         {...field}
                         type="number"
                       />
@@ -206,19 +213,36 @@ export default function FormCreateCampaign() {
 
               <FormField
                 control={form.control}
-                name="duration"
+                name="startDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duration (Minutes)</FormLabel>
+                    <FormLabel>Start Date</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter project link"
-                        {...field}
-                        type="number"
-                      />
+                      <div>
+                        <DateTimePicker onUpdateDate={field.onChange} />
+                      </div>
                     </FormControl>
                     <FormDescription>
-                      This is your funding duration.
+                      This is your campaign start date.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End Date</FormLabel>
+                    <FormControl>
+                      <div>
+                        <DateTimePicker onUpdateDate={field.onChange} />
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      This is your campaign end date.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
