@@ -24,7 +24,7 @@ export function TimePicker({ date, setDate }: TimePickerProps) {
         <TimePickerInput
           picker="hours"
           date={date}
-          setDate={setDate}
+          setDate={setDate as any}
           ref={hourRef}
           onRightFocus={() => minuteRef.current?.focus()}
         />
@@ -36,7 +36,7 @@ export function TimePicker({ date, setDate }: TimePickerProps) {
         <TimePickerInput
           picker="minutes"
           date={date}
-          setDate={setDate}
+          setDate={setDate as any}
           ref={minuteRef}
           onLeftFocus={() => hourRef.current?.focus()}
           onRightFocus={() => secondRef.current?.focus()}
@@ -49,7 +49,7 @@ export function TimePicker({ date, setDate }: TimePickerProps) {
         <TimePickerInput
           picker="seconds"
           date={date}
-          setDate={setDate}
+          setDate={setDate as any}
           ref={secondRef}
           onLeftFocus={() => minuteRef.current?.focus()}
         />
