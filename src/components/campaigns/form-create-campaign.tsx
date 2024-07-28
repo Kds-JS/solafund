@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,8 +20,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { storeFile } from '@/services/ipfs';
 import { DateTimePicker } from '@/components/time';
-
 import { toast } from 'react-toastify';
+
+import { useWallet } from '@solana/wallet-adapter-react';
+import { createCampaign } from '@/services/programs';
+import { SessionContext } from '../wallets/sessions';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -53,6 +56,8 @@ const formSchema = z.object({
 
 export default function FormCreateCampaign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { program } = useContext(SessionContext);
+  const { publicKey } = useWallet();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,6 +90,19 @@ export default function FormCreateCampaign() {
     // }
     // const imageCID = result!.IpfsHash;
     // console.log(imageCID);
+
+    const tx = await createCampaign(program!, publicKey!, {
+      title: values.title,
+      description: values.description,
+      org_name: values.orgName,
+      project_link: values.link,
+      project_image: 'imageCID',
+      goal: values.goal,
+      startAt: values.startDate,
+      endAt: values.endDate,
+    });
+
+    console.log(tx);
   }
 
   return (

@@ -52,6 +52,9 @@ describe("crowdfunding", () => {
       const campaignParams = {
         title: "Campaign 1",
         description: "This is a Campaign 1",
+        org_name: "org name",
+        project_link: "project link",
+        project_image: "project image",
         goal: new BN(10 * LAMPORTS_PER_SOL),
         start_at: new BN(startTimestamp),
         end_at: new BN(endTimestamp),
@@ -66,12 +69,24 @@ describe("crowdfunding", () => {
       async function createCampaign(
         title: string,
         description: string,
+        org_name: string,
+        project_link: string,
+        project_image: string,
         goal: BN,
         start_at: BN,
         end_at: BN
       ) {
         return await program.methods
-          .createCampaign(title, description, goal, start_at, end_at)
+          .createCampaign(
+            title,
+            description,
+            org_name,
+            project_link,
+            project_image,
+            goal,
+            start_at,
+            end_at
+          )
           .accounts({
             signer: wallet1.publicKey,
             campaign,
@@ -84,6 +99,9 @@ describe("crowdfunding", () => {
         await createCampaign(
           campaignParams.title,
           campaignParams.description,
+          campaignParams.org_name,
+          campaignParams.project_link,
+          campaignParams.project_image,
           campaignParams.goal,
           new BN(startTimestamp - 1000),
           campaignParams.end_at
@@ -96,6 +114,9 @@ describe("crowdfunding", () => {
         await createCampaign(
           campaignParams.title,
           campaignParams.description,
+          campaignParams.org_name,
+          campaignParams.project_link,
+          campaignParams.project_image,
           campaignParams.goal,
           campaignParams.start_at,
           campaignParams.start_at
@@ -108,6 +129,9 @@ describe("crowdfunding", () => {
         await createCampaign(
           campaignParams.title,
           campaignParams.description,
+          campaignParams.org_name,
+          campaignParams.project_link,
+          campaignParams.project_image,
           new BN(0),
           campaignParams.start_at,
           campaignParams.end_at
@@ -123,12 +147,24 @@ describe("crowdfunding", () => {
         signerKeypair: Keypair,
         title: string,
         description: string,
+        org_name: string,
+        project_link: string,
+        project_image: string,
         goal: BN,
         startAt: BN,
         endAt: BN
       ) {
         return await program.methods
-          .createCampaign(title, description, goal, startAt, endAt)
+          .createCampaign(
+            title,
+            description,
+            org_name,
+            project_link,
+            project_image,
+            goal,
+            startAt,
+            endAt
+          )
           .accounts({
             signer,
             campaign: campaignPda,
@@ -143,6 +179,9 @@ describe("crowdfunding", () => {
       const campaignParams = {
         title: "Campaign 1",
         description: "This is a Campaign 1",
+        org_name: "org name",
+        project_link: "project link",
+        project_image: "project image",
         goal: new BN(10 * LAMPORTS_PER_SOL),
         startAt: new BN(startTimestamp),
         endAt: new BN(endTimestamp),
@@ -160,6 +199,9 @@ describe("crowdfunding", () => {
         wallet1,
         campaignParams.title,
         campaignParams.description,
+        campaignParams.org_name,
+        campaignParams.project_link,
+        campaignParams.project_image,
         campaignParams.goal,
         campaignParams.startAt,
         campaignParams.endAt
@@ -201,6 +243,9 @@ describe("crowdfunding", () => {
         wallet2,
         "Campagn 2",
         campaignParams.description,
+        campaignParams.org_name,
+        campaignParams.project_link,
+        campaignParams.project_image,
         new BN(2.5 * LAMPORTS_PER_SOL),
         new BN(startTimestamp2),
         new BN(endTimestamp2)
@@ -229,6 +274,9 @@ describe("crowdfunding", () => {
         wallet3,
         "Campagn 3",
         campaignParams.description,
+        campaignParams.org_name,
+        campaignParams.project_link,
+        campaignParams.project_image,
         new BN(15 * LAMPORTS_PER_SOL),
         new BN(startTimestamp3),
         new BN(endTimestamp3)

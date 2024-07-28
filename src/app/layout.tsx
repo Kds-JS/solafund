@@ -5,6 +5,8 @@ import { WalletContextProvider } from '@/components';
 import './globals.css';
 
 import { ThemeProvider } from '@/providers/theme-provider';
+import { ToastContainer } from 'react-toastify';
+import { AuthContext } from '@/components/wallets';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -27,7 +29,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={GeistSans.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <WalletContextProvider>{children}</WalletContextProvider>
+          <ToastContainer pauseOnHover theme="colored" />
+          <AuthContext>
+            <WalletContextProvider>{children}</WalletContextProvider>
+          </AuthContext>
         </ThemeProvider>
       </body>
     </html>

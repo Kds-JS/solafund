@@ -3,9 +3,7 @@
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Button } from '../ui/button';
 import { getAccountBalance } from '@/services/web3';
-import { NetworkName } from '@/types';
 import { SessionContext } from './sessions';
 
 type BaseWalletMultiButtonProps = any & {

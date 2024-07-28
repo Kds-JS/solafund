@@ -1,3 +1,5 @@
+'use server';
+
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { NetworkName } from '@/types';
 import { getAlchemyRpcUrl } from '@/services/web3';
