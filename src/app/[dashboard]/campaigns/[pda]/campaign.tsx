@@ -32,6 +32,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
           imageLink: `${IPFS_BASE_URL}/${campaignData.projectImage}`,
           projectLink: campaignData.projectLink,
           pdaAddress: pda,
+          startTimestamp: campaignData.startAt.toNumber() * 1000,
           endTimestamp: campaignData.endAt.toNumber() * 1000,
         };
 
@@ -60,6 +61,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
             imageLink={campaign.imageLink}
             projectLink={campaign.projectLink}
             pdaAddress={campaign.pdaAddress}
+            startTimestamp={campaign.startTimestamp}
             endTimestamp={campaign.endTimestamp}
           />
         )}

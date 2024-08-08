@@ -4,9 +4,18 @@ import { getTimeRemaining } from '@/utils';
 import { CalendarIcon, ExternalLinkIcon } from '@radix-ui/react-icons';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from '@/components/ui/button';
 import { DonationModal } from './donation-modal';
+import { SessionContext } from '../wallets/sessions';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { toast } from 'react-toastify';
+import {
+  cancelCampaign,
+  cancelDonation,
+  claimDonations,
+} from '@/services/programs';
+import { PublicKey } from '@solana/web3.js';
 
 export interface CampaignDetailProps {
   orgName: string;
@@ -17,6 +26,7 @@ export interface CampaignDetailProps {
   imageLink: string;
   projectLink: string;
   pdaAddress: string;
+  startTimestamp: number;
   endTimestamp: number;
   isDashboard?: boolean;
 }
@@ -29,11 +39,55 @@ export const CampaignDetail = ({
   goal,
   imageLink,
   projectLink,
+  pdaAddress,
+  startTimestamp,
   endTimestamp,
   isDashboard = false,
 }: CampaignDetailProps) => {
   const raisedPercent = Math.floor((raised / goal) * 100);
   const { days, hours, minutes, seconds, end } = getTimeRemaining(endTimestamp);
+
+  const { program } = useContext(SessionContext);
+  const { publicKey } = useWallet();
+
+  async function handleClaimDonations() {
+    if (program && publicKey) {
+      try {
+        const campaign = new PublicKey(pdaAddress);
+        const tx = await claimDonations(program, campaign);
+        toast.success('donations claimed');
+        console.log(tx);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  }
+
+  async function handleCancelDonation() {
+    if (program && publicKey) {
+      try {
+        const campaign = new PublicKey(pdaAddress);
+        const tx = await cancelDonation(program, campaign, publicKey);
+        toast.success('donation cancelled');
+        console.log(tx);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  }
+
+  async function handleCancelCampaign() {
+    if (program && publicKey) {
+      try {
+        const campaign = new PublicKey(pdaAddress);
+        const tx = await cancelCampaign(program, campaign);
+        toast.success('campaign cancelled');
+        console.log(tx);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  }
 
   return (
     <div className="grid grid-cols-1 gap-[25px] md:grid-cols-3">
@@ -112,19 +166,31 @@ export const CampaignDetail = ({
 
         {isDashboard && (
           <div className="mt-[20px] flex items-center justify-between">
-            <Button disabled={!end || (end && raisedPercent < 100)}>
+            <Button
+              disabled={!end || (end && raisedPercent < 100)}
+              onClick={handleClaimDonations}
+            >
               Withdraw donation
+            </Button>
+
+            <Button variant={'outline'} onClick={handleCancelCampaign}>
+              Cancel campaign
             </Button>
           </div>
         )}
 
         {!isDashboard && (
           <div className="mt-[20px] flex items-center justify-between">
-            <DonationModal />
+            <DonationModal
+              pdaAddress={pdaAddress}
+              startTimestamp={startTimestamp}
+              endTimestamp={endTimestamp}
+            />
 
             <Button
               variant={'outline'}
               disabled={!end || (end && raisedPercent >= 100)}
+              onClick={handleCancelDonation}
             >
               Cancel donation
             </Button>

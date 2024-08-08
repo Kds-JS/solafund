@@ -30,6 +30,7 @@ export const CampaignList = () => {
           imageLink: `${IPFS_BASE_URL}/${campaignAccount.projectImage}`,
           projectLink: campaignAccount.projectLink,
           pdaAddress: campaignPublicKey.toString(),
+          startTimestamp: campaignAccount.startAt.toNumber() * 1000,
           endTimestamp: campaignAccount.endAt.toNumber() * 1000,
         }),
       );

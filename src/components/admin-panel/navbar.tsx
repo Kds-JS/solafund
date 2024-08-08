@@ -19,7 +19,7 @@ export function Navbar({ title }: NavbarProps) {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ModeToggle />
-          <SelectNetwork/>
+          <SelectNetwork />
           <WalletConnectButton />
         </div>
       </div>

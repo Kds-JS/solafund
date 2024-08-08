@@ -7,5 +7,6 @@ export interface CampaignData {
   imageLink: string;
   projectLink: string;
   pdaAddress: string;
+  startTimestamp: number;
   endTimestamp: number;
 }

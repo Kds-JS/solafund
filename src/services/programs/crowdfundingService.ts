@@ -1,7 +1,7 @@
 import {
   CrowdfundingProgram,
   getProgramDerivedCampaign,
-  getProgramDerivedContribution
+  getProgramDerivedContribution,
 } from '@/programs/crowdfunding';
 import { getDateTimestamp } from '@/utils';
 import { Program, BN } from '@coral-xyz/anchor';
@@ -49,16 +49,14 @@ export async function createCampaign(
 
 export async function cancelCampaign(
   program: Program<CrowdfundingProgram>,
-  campaign: PublicKey
+  campaign: PublicKey,
 ): Promise<string> {
-
   const tx = await program.methods
     .cancelCampaign()
     .accounts({ campaign })
     .rpc();
   return tx;
 }
-
 
 export async function donate(
   program: Program<CrowdfundingProgram>,
@@ -84,8 +82,13 @@ export async function donate(
 export async function cancelDonation(
   program: Program<CrowdfundingProgram>,
   campaign: PublicKey,
-  contribution: PublicKey,
+  signer: PublicKey,
 ): Promise<string> {
+  const { contribution } = await getProgramDerivedContribution(
+    program.programId,
+    signer,
+    campaign,
+  );
 
   const tx = await program.methods
     .cancelDonation()
@@ -94,12 +97,10 @@ export async function cancelDonation(
   return tx;
 }
 
-
 export async function claimDonations(
   program: Program<CrowdfundingProgram>,
-  campaign: PublicKey
+  campaign: PublicKey,
 ): Promise<string> {
-
   const tx = await program.methods
     .claimDonations()
     .accounts({ campaign })
