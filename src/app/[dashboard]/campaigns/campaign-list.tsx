@@ -13,7 +13,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export const CampaignList = () => {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
-  const { program } = useContext(SessionContext);
+  const { program, selectedNetwork } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
   async function getCampaignList() {
@@ -41,7 +41,7 @@ export const CampaignList = () => {
 
   useEffect(() => {
     getCampaignList();
-  }, [program, publicKey]);
+  }, [program, publicKey, selectedNetwork]);
 
   return (
     <Card className="mt-6 min-h-[calc(100vh_-_220px)] rounded-lg border-none">

@@ -15,7 +15,7 @@ interface CampaignProps {
 
 export const Campaign = ({ pda }: CampaignProps) => {
   const [campaign, setCampaign] = useState<CampaignData | null>(null);
-  const { program } = useContext(SessionContext);
+  const { program, selectedNetwork } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
   async function getCampaignList() {
@@ -45,7 +45,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
 
   useEffect(() => {
     getCampaignList();
-  }, [program, publicKey]);
+  }, [program, publicKey, selectedNetwork]);
 
   return (
     <Card className="mt-6 min-h-[calc(100vh_-_220px)] rounded-lg border-none">
