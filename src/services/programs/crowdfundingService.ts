@@ -1,6 +1,7 @@
 import {
   CrowdfundingProgram,
   getProgramDerivedCampaign,
+  getProgramDerivedContribution
 } from '@/programs/crowdfunding';
 import { getDateTimestamp } from '@/utils';
 import { Program, BN } from '@coral-xyz/anchor';
@@ -41,6 +42,66 @@ export async function createCampaign(
       startAt,
       endAt,
     )
+    .accounts({ campaign })
+    .rpc();
+  return tx;
+}
+
+export async function cancelCampaign(
+  program: Program<CrowdfundingProgram>,
+  campaign: PublicKey
+): Promise<string> {
+
+  const tx = await program.methods
+    .cancelCampaign()
+    .accounts({ campaign })
+    .rpc();
+  return tx;
+}
+
+
+export async function donate(
+  program: Program<CrowdfundingProgram>,
+  campaign: PublicKey,
+  signer: PublicKey,
+  amount: number,
+): Promise<string> {
+  const newAmount = new BN(amount * LAMPORTS_PER_SOL);
+
+  const { contribution } = await getProgramDerivedContribution(
+    program.programId,
+    signer,
+    campaign,
+  );
+
+  const tx = await program.methods
+    .donate(newAmount)
+    .accounts({ campaign, contribution })
+    .rpc();
+  return tx;
+}
+
+export async function cancelDonation(
+  program: Program<CrowdfundingProgram>,
+  campaign: PublicKey,
+  contribution: PublicKey,
+): Promise<string> {
+
+  const tx = await program.methods
+    .cancelDonation()
+    .accounts({ campaign, contribution })
+    .rpc();
+  return tx;
+}
+
+
+export async function claimDonations(
+  program: Program<CrowdfundingProgram>,
+  campaign: PublicKey
+): Promise<string> {
+
+  const tx = await program.methods
+    .claimDonations()
     .accounts({ campaign })
     .rpc();
   return tx;
