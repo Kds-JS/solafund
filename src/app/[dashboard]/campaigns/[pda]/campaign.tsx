@@ -1,40 +1,68 @@
-import React from 'react';
+'use client';
+
+import React, { useContext, useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CampaignDetail } from '@/components';
+import { CampaignData, IPFS_BASE_URL } from '@/types';
+import { SessionContext } from '@/components/wallets/sessions';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { toast } from 'react-toastify';
 
 interface CampaignProps {
   pda: string;
 }
 
 export const Campaign = ({ pda }: CampaignProps) => {
-  const campaignData = {
-    orgName: 'Peak Network',
-    projectTitle: 'Help us release a cookbook for parents and kids',
-    description:
-      'We want to create beautiful and helpful cooking book for parents and kids to have fun in kitchen. Kid cooking organization specializes in detary content publishing and popularization of a healthy diet.',
-    raised: 743,
-    goal: 3000,
-    imageLink: 'https://i.ibb.co/rfzzN4C/peaq-101.webp',
-    projectLink: 'https://www.peaq.network/',
-    pdaAddress: 'C1oamQ8t8eGq3D7XEbQWTxCtzcpsbumvJw4mj6cnNZxB',
-    endTimestamp: 1724390683000,
-  };
+  const [campaign, setCampaign] = useState<CampaignData | null>(null);
+  const { program } = useContext(SessionContext);
+  const { publicKey } = useWallet();
+
+  async function getCampaignList() {
+    if (program && publicKey) {
+      try {
+        const campaignData = await program.account.campaign.fetch(pda);
+
+        const newCampaign: CampaignData = {
+          orgName: campaignData.orgName,
+          projectTitle: campaignData.title,
+          description: campaignData.description,
+          raised: campaignData.totalDonated.toNumber(),
+          goal: campaignData.goal.toNumber() / LAMPORTS_PER_SOL,
+          imageLink: `${IPFS_BASE_URL}/${campaignData.projectImage}`,
+          projectLink: campaignData.projectLink,
+          pdaAddress: pda,
+          endTimestamp: campaignData.endAt.toNumber() * 1000,
+        };
+
+        setCampaign(newCampaign);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  }
+
+  useEffect(() => {
+    getCampaignList();
+  }, [program, publicKey]);
 
   return (
     <Card className="mt-6 min-h-[calc(100vh_-_220px)] rounded-lg border-none">
       <CardContent className="p-6">
-        <CampaignDetail
-          isDashboard={true}
-          projectTitle={campaignData.projectTitle}
-          orgName={campaignData.orgName}
-          description={campaignData.description}
-          raised={campaignData.raised}
-          goal={campaignData.goal}
-          imageLink={campaignData.imageLink}
-          projectLink={campaignData.projectLink}
-          pdaAddress={campaignData.pdaAddress}
-          endTimestamp={campaignData.endTimestamp}
-        />
+        {campaign && (
+          <CampaignDetail
+            isDashboard={true}
+            projectTitle={campaign.projectTitle}
+            orgName={campaign.orgName}
+            description={campaign.description}
+            raised={campaign.raised}
+            goal={campaign.goal}
+            imageLink={campaign.imageLink}
+            projectLink={campaign.projectLink}
+            pdaAddress={campaign.pdaAddress}
+            endTimestamp={campaign.endTimestamp}
+          />
+        )}
       </CardContent>
     </Card>
   );

@@ -73,7 +73,7 @@ export const CampaignDetail = ({
                   <span className="text-[14px]">{raised} SOL</span>
                 </div>
 
-                <div className="flex flex-col gap-[5px] rounded-sm bg-green-500 p-1 font-semibold">
+                <div className="flex min-w-[70px] flex-col gap-[5px] rounded-sm bg-green-500 p-1 font-semibold">
                   <span className="text-[12px]">Goal</span>
                   <span className="text-[14px]">{goal} SOL</span>
                 </div>
