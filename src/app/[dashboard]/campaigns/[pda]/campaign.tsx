@@ -7,7 +7,6 @@ import { CampaignData, IPFS_BASE_URL } from '@/types';
 import { SessionContext } from '@/components/wallets/sessions';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { toast } from 'react-toastify';
 
 interface CampaignProps {
   pda: string;
@@ -15,7 +14,7 @@ interface CampaignProps {
 
 export const Campaign = ({ pda }: CampaignProps) => {
   const [campaign, setCampaign] = useState<CampaignData | null>(null);
-  const { program, selectedNetwork } = useContext(SessionContext);
+  const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
   async function getCampaignList() {
@@ -38,14 +37,15 @@ export const Campaign = ({ pda }: CampaignProps) => {
 
         setCampaign(newCampaign);
       } catch (error: any) {
-        toast.error(error.message);
+        setCampaign(null);
+        console.log(error);
       }
     }
   }
 
   useEffect(() => {
     getCampaignList();
-  }, [program, publicKey, selectedNetwork]);
+  }, [program, publicKey]);
 
   return (
     <Card className="mt-6 min-h-[calc(100vh_-_220px)] rounded-lg border-none">

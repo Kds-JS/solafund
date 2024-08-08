@@ -13,35 +13,40 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export const CampaignList = () => {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
-  const { program, selectedNetwork } = useContext(SessionContext);
+  const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
   async function getCampaignList() {
     if (program && publicKey) {
-      const allCampaigns = await program.account.campaign.all();
+      try {
+        const allCampaigns = await program.account.campaign.all();
 
-      const newCampaigns: CampaignData[] = allCampaigns.map(
-        ({ account: campaignAccount, publicKey: campaignPublicKey }) => ({
-          orgName: campaignAccount.orgName,
-          projectTitle: campaignAccount.title,
-          description: campaignAccount.description,
-          raised: campaignAccount.totalDonated.toNumber(),
-          goal: campaignAccount.goal.toNumber() / LAMPORTS_PER_SOL,
-          imageLink: `${IPFS_BASE_URL}/${campaignAccount.projectImage}`,
-          projectLink: campaignAccount.projectLink,
-          pdaAddress: campaignPublicKey.toString(),
-          startTimestamp: campaignAccount.startAt.toNumber() * 1000,
-          endTimestamp: campaignAccount.endAt.toNumber() * 1000,
-        }),
-      );
+        const newCampaigns: CampaignData[] = allCampaigns.map(
+          ({ account: campaignAccount, publicKey: campaignPublicKey }) => ({
+            orgName: campaignAccount.orgName,
+            projectTitle: campaignAccount.title,
+            description: campaignAccount.description,
+            raised: campaignAccount.totalDonated.toNumber(),
+            goal: campaignAccount.goal.toNumber() / LAMPORTS_PER_SOL,
+            imageLink: `${IPFS_BASE_URL}/${campaignAccount.projectImage}`,
+            projectLink: campaignAccount.projectLink,
+            pdaAddress: campaignPublicKey.toString(),
+            startTimestamp: campaignAccount.startAt.toNumber() * 1000,
+            endTimestamp: campaignAccount.endAt.toNumber() * 1000,
+          }),
+        );
 
-      setCampaigns(newCampaigns);
+        setCampaigns(newCampaigns);
+      } catch (error) {
+        setCampaigns([]);
+        console.log(error);
+      }
     }
   }
 
   useEffect(() => {
     getCampaignList();
-  }, [program, publicKey, selectedNetwork]);
+  }, [program, publicKey]);
 
   return (
     <Card className="mt-6 min-h-[calc(100vh_-_220px)] rounded-lg border-none">
