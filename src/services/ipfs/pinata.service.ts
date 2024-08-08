@@ -1,11 +1,22 @@
+'use server';
+
+import { createFileObject } from '@/utils';
+
+interface FileData {
+  fileData: string;
+  fileName: string;
+  mimeType: string;
+}
+
 export async function storeFile(
-  file: File,
+  { fileData, fileName, mimeType }: FileData,
   name: string,
 ): Promise<{
   result: { IpfsHash: string; PinSize: number; Timestamp: string } | null;
   errors: string | null;
 }> {
   try {
+    const file = createFileObject(fileData, fileName, mimeType);
     const data = new FormData();
     data.append('file', file);
     const pinataMetadata = JSON.stringify({
@@ -18,7 +29,7 @@ export async function storeFile(
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+          Authorization: `Bearer ${process.env.PINATA_JWT}`,
         },
         body: data,
       },

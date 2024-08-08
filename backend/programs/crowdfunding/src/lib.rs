@@ -14,6 +14,9 @@ pub mod crowdfunding {
         ctx: Context<CreateCampaign>,
         title: String,
         description: String,
+        org_name: String,
+        project_link: String,
+        project_image: String,
         goal: u64,
         start_at: i64,
         end_at: i64
@@ -29,6 +32,9 @@ pub mod crowdfunding {
 
         campaign.title = title.clone();
         campaign.description = description;
+        campaign.org_name = org_name;
+        campaign.project_link = project_link;
+        campaign.project_image = project_image;
         campaign.authority = ctx.accounts.signer.key();
         campaign.goal = goal;
         campaign.total_donated = 0;
@@ -136,7 +142,7 @@ pub mod crowdfunding {
 }
 
 #[derive(Accounts)]
-#[instruction(title:String, description:String)]
+#[instruction(title:String, description:String, org_name: String, project_link: String, project_image: String)]
 pub struct CreateCampaign<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
@@ -144,7 +150,24 @@ pub struct CreateCampaign<'info> {
     #[account(
         init,
         payer = signer,
-        space = 8 + 32 + 8 + 8 + 1 + 1 + 8 + 8 + 4 + title.len() + 4 + description.len(),
+        space = 8 +
+        32 +
+        8 +
+        8 +
+        1 +
+        1 +
+        8 +
+        8 +
+        4 +
+        title.len() +
+        4 +
+        description.len() +
+        4 +
+        org_name.len() +
+        4 +
+        project_link.len() +
+        4 +
+        project_image.len(),
         seeds = [title.as_bytes(), signer.key().as_ref()],
         bump
     )]
@@ -208,6 +231,9 @@ pub struct CancelDonation<'info> {
 pub struct Campaign {
     pub title: String,
     pub description: String,
+    pub org_name: String,
+    pub project_link: String,
+    pub project_image: String,
     pub authority: Pubkey,
     pub goal: u64,
     pub total_donated: u64,

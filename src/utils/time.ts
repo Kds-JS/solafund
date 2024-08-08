@@ -27,3 +27,9 @@ export function getTimeRemaining(targetTimestamp: number) {
     end: false,
   };
 }
+
+export function getDateTimestamp(date: Date): number {
+  const timestamp = date.getTime();
+  const timestampInSeconds = Math.floor(timestamp / 1000);
+  return timestampInSeconds;
+}

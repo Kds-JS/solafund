@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,8 +20,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { storeFile } from '@/services/ipfs';
 import { DateTimePicker } from '@/components/time';
-
 import { toast } from 'react-toastify';
+
+import { useWallet } from '@solana/wallet-adapter-react';
+import { createCampaign } from '@/services/programs';
+import { SessionContext } from '../wallets/sessions';
+import { fileToBase64 } from '@/utils';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -53,6 +57,8 @@ const formSchema = z.object({
 
 export default function FormCreateCampaign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { program } = useContext(SessionContext);
+  const { publicKey } = useWallet();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,24 +73,57 @@ export default function FormCreateCampaign() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const currentDate = new Date();
+
+    if (values.startDate.getTime() <= currentDate.getTime()) {
+      toast.error('start time is too early');
+      return;
+    }
 
     if (values.endDate.getTime() <= values.startDate.getTime()) {
       toast.error('end date must be greater than start date');
+      return;
     }
-    console.log(selectedImage);
+
+    /**
+     * Transform file
+     */
+    const base64File = await fileToBase64(selectedImage!);
+    const mimeType = selectedImage!.type;
+    const fileData = {
+      fileData: base64File,
+      fileName: selectedImage!.name,
+      mimeType: mimeType,
+    };
 
     /**
      * Store Image to IPFS
      */
-    // const { result, errors } = await storeFile(selectedImage!, values.name);
-    // if (errors) {
-    //   console.log(errors);
-    //   // send toast here
-    //   return;
-    // }
-    // const imageCID = result!.IpfsHash;
-    // console.log(imageCID);
+    const { result, errors } = await storeFile(fileData, values.title);
+    if (errors) {
+      toast.error('failed to store image to IPFS');
+      return;
+    }
+    const imageCID = result!.IpfsHash;
+
+    try {
+      const tx = await createCampaign(program!, publicKey!, {
+        title: values.title,
+        description: values.description,
+        org_name: values.orgName,
+        project_link: values.link,
+        project_image: imageCID,
+        goal: values.goal,
+        startAt: values.startDate,
+        endAt: values.endDate,
+      });
+
+      console.log(tx);
+
+      toast.success('campaign created');
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }
 
   return (
