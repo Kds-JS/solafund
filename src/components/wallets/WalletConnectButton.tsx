@@ -78,7 +78,10 @@ export function BaseWalletMultiButton({
 
   const updateWalletbalance = async () => {
     if (publicKey) {
-      const newBalance = await getAccountBalance(publicKey, selectedNetwork);
+      const newBalance = await getAccountBalance(
+        publicKey.toString(),
+        selectedNetwork,
+      );
       setWalletBalance(Number(newBalance.toFixed(3)));
     }
   };

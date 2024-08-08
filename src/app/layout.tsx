@@ -30,9 +30,9 @@ export default function RootLayout({
       <body className={GeistSans.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ToastContainer pauseOnHover theme="colored" />
-          <AuthContext>
-            <WalletContextProvider>{children}</WalletContextProvider>
-          </AuthContext>
+          <WalletContextProvider>
+            <AuthContext>{children}</AuthContext>
+          </WalletContextProvider>
         </ThemeProvider>
       </body>
     </html>
