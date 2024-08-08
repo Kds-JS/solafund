@@ -11,14 +11,14 @@ export const SessionContext = React.createContext<{
   program: Program<CrowdfundingProgram> | null;
   setSelectedNetwork: any;
 }>({
-  selectedNetwork: NetworkName.Mainnet,
+  selectedNetwork: NetworkName.Devnet,
   program: null,
   setSelectedNetwork: () => {},
 });
 
 export function useSession() {
   const [selectedNetwork, setSelectedNetwork] = useState<NetworkName>(
-    NetworkName.Mainnet,
+    NetworkName.Devnet,
   );
   const [program, setProgram] = useState<Program<CrowdfundingProgram> | null>(
     null,
@@ -29,15 +29,22 @@ export function useSession() {
   useEffect(() => {
     let provider: anchor.Provider;
 
-    const programId = getProgamId(selectedNetwork);
-
-    try {
-      provider = anchor.getProvider();
-    } catch {
+    const setAnchorProvider = () => {
       provider = new anchor.AnchorProvider(connection, wallet!, {
         commitment: 'confirmed',
       });
       anchor.setProvider(provider);
+    };
+
+    const programId = getProgamId(selectedNetwork);
+
+    try {
+      provider = anchor.getProvider();
+      if (!provider.publicKey) {
+        setAnchorProvider();
+      }
+    } catch {
+      setAnchorProvider();
     }
 
     const program = new anchor.Program(IDL, programId);
