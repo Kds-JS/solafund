@@ -115,7 +115,9 @@ export function BaseWalletMultiButton({
         walletName={walletName}
       >
         <span className="flex items-center gap-[5px]">
-          {publicKey && <span>{walletBalance} SOL</span>}
+          {publicKey && (
+            <span className="hidden sm:block">{walletBalance} SOL</span>
+          )}
           {content}
         </span>
       </button>

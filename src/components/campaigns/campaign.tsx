@@ -18,10 +18,10 @@ import {
 import { PublicKey } from '@solana/web3.js';
 import { CampaignData } from '@/types';
 import { delay } from '@/utils/delay';
+import { usePathname } from 'next/navigation';
 
 export interface CampaignDetailProps {
   campaign: CampaignData;
-  isDashboard?: boolean;
   handleUpdateCampaign?: () => void;
 }
 
@@ -37,10 +37,13 @@ export const CampaignDetail = ({
     pdaAddress,
     startTimestamp,
     endTimestamp,
+    donationCompleted,
   },
-  isDashboard = false,
   handleUpdateCampaign,
 }: CampaignDetailProps) => {
+  const pathname = usePathname();
+  const isDashboard = pathname.includes('/dashboard');
+
   const raisedPercent = Math.floor((raised / goal) * 100);
   const {
     days: startDays,
@@ -72,6 +75,8 @@ export const CampaignDetail = ({
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -85,6 +90,8 @@ export const CampaignDetail = ({
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -98,6 +105,8 @@ export const CampaignDetail = ({
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -139,7 +148,9 @@ export const CampaignDetail = ({
                   <span className="text-[14px]">{raised} SOL</span>
                 </div>
 
-                <div className="flex min-w-[70px] flex-col gap-[5px] rounded-sm bg-green-500 p-1 font-semibold">
+                <div
+                  className={`flex min-w-[70px] flex-col gap-[5px] rounded-sm ${donationCompleted ? 'bg-green-500' : 'bg-blue-500'} p-1 font-semibold`}
+                >
                   <span className="text-[12px]">Goal</span>
                   <span className="text-[14px]">{goal} SOL</span>
                 </div>

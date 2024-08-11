@@ -53,7 +53,6 @@ export const Campaign = ({ pda }: CampaignProps) => {
       <CardContent className="p-6">
         {campaign && (
           <CampaignDetail
-            isDashboard={false}
             campaign={campaign}
             handleUpdateCampaign={getCampaign}
           />

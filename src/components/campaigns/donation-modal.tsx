@@ -33,12 +33,12 @@ export const DonationModal = ({
   const { publicKey } = useWallet();
 
   async function handleSubmit() {
-    if (amount <= 0) {
-      toast.error('amount must be greater than 0');
-      return;
-    }
-
     if (program && publicKey) {
+      if (amount <= 0) {
+        toast.error('amount must be greater than 0');
+        return;
+      }
+
       try {
         const campaign = new PublicKey(pdaAddress);
         await donate(program, campaign, publicKey, amount);
@@ -48,6 +48,8 @@ export const DonationModal = ({
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
