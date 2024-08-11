@@ -37,7 +37,7 @@ export function getMenuList(pathname: string): Group[] {
             },
             {
               href: '/dashboard/campaigns/new',
-              label: 'New Campaign',
+              label: 'Create Campaign',
               active: pathname === '/dashboard/campaigns/new',
             },
           ],

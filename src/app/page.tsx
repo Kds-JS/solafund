@@ -47,18 +47,16 @@ export default function HomePage() {
             </span>
             <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-6">
               <Button variant="default" asChild>
-                <Link href="/dashboard">
-                  Demo
+                <Link href="/dashboard/campaigns/new">
+                  Dashboard
                   <ArrowRightIcon className="ml-2" />
                 </Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link
-                  href="hhttps://solana.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/campaigns"
                 >
-                  Learn solana
+                  See All Campaigns
                 </Link>
               </Button>
             </div>

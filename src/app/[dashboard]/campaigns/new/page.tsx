@@ -13,7 +13,7 @@ import FormCreateCampaign from '@/components/campaigns/form-create-campaign';
 
 export default function NewCampaignPage() {
   return (
-    <ContentLayout title="New Campaign">
+    <ContentLayout title="Create Campaign">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -29,7 +29,7 @@ export default function NewCampaignPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>New</BreadcrumbPage>
+            <BreadcrumbPage>Create</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
