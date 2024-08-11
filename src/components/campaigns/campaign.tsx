@@ -42,6 +42,13 @@ export const CampaignDetail = ({
   handleUpdateCampaign,
 }: CampaignDetailProps) => {
   const raisedPercent = Math.floor((raised / goal) * 100);
+  const {
+    days: startDays,
+    hours: startHours,
+    minutes: startMinutes,
+    seconds: startSeconds,
+    end: started,
+  } = getTimeRemaining(startTimestamp);
   const { days, hours, minutes, seconds, end } = getTimeRemaining(endTimestamp);
   const currentTime = new Date().getTime();
 
@@ -141,30 +148,62 @@ export const CampaignDetail = ({
               <Progress value={raisedPercent} />
             </div>
 
-            <div className="flex items-center gap-[5px] text-[12px] font-bold">
-              <span>
-                <CalendarIcon height={20} width={20} />
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                <span>
+                  <CalendarIcon height={20} width={20} />
+                </span>
 
-              {end ? (
-                <p>Campaign End</p>
-              ) : (
-                <p>
-                  {days > 0 && (
-                    <span>
-                      {days} {days > 1 ? 'days' : 'day'}
-                    </span>
-                  )}
-                  {days <= 0 && hours > 0 && <span>{hours} hours</span>}
-                  {days <= 0 && hours <= 0 && minutes > 0 && (
-                    <span>{minutes} minutes</span>
-                  )}
-                  {days <= 0 && hours <= 0 && minutes <= 0 && seconds >= 0 && (
-                    <span>{seconds} seconds</span>
-                  )}
-                  {' left'}
-                </p>
-              )}
+                {started ? (
+                  <p>Campaign Started</p>
+                ) : (
+                  <p>
+                    {'start in '}
+                    {startDays > 0 && (
+                      <span>
+                        {startDays} {startDays > 1 ? 'days' : 'day'}
+                      </span>
+                    )}
+                    {startDays <= 0 && startHours > 0 && (
+                      <span>{startHours} hours</span>
+                    )}
+                    {startDays <= 0 && startHours <= 0 && startMinutes > 0 && (
+                      <span>{startMinutes} minutes</span>
+                    )}
+                    {startDays <= 0 &&
+                      startHours <= 0 &&
+                      startMinutes <= 0 &&
+                      startSeconds >= 0 && <span>{startSeconds} seconds</span>}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                <span>
+                  <CalendarIcon height={20} width={20} />
+                </span>
+
+                {end ? (
+                  <p>Campaign End</p>
+                ) : (
+                  <p>
+                    {days > 0 && (
+                      <span>
+                        {days} {days > 1 ? 'days' : 'day'}
+                      </span>
+                    )}
+                    {days <= 0 && hours > 0 && <span>{hours} hours</span>}
+                    {days <= 0 && hours <= 0 && minutes > 0 && (
+                      <span>{minutes} minutes</span>
+                    )}
+                    {days <= 0 &&
+                      hours <= 0 &&
+                      minutes <= 0 &&
+                      seconds >= 0 && <span>{seconds} seconds</span>}
+                    {' left'}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -178,7 +217,11 @@ export const CampaignDetail = ({
               Withdraw donation
             </Button>
 
-            <Button variant={'outline'} onClick={handleCancelCampaign} disabled={startTimestamp < currentTime}>
+            <Button
+              variant={'outline'}
+              onClick={handleCancelCampaign}
+              disabled={startTimestamp < currentTime}
+            >
               Cancel campaign
             </Button>
           </div>
@@ -190,6 +233,7 @@ export const CampaignDetail = ({
               pdaAddress={pdaAddress}
               startTimestamp={startTimestamp}
               endTimestamp={endTimestamp}
+              raisedPercent={raisedPercent}
               handleUpdateCampaign={updateCampaignData}
             />
 

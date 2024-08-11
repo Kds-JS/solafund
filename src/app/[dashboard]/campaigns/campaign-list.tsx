@@ -33,6 +33,8 @@ export const CampaignList = () => {
             pdaAddress: campaignPublicKey.toString(),
             startTimestamp: campaignAccount.startAt.toNumber() * 1000,
             endTimestamp: campaignAccount.endAt.toNumber() * 1000,
+            donationCompleted: campaignAccount.donationCompleted,
+            isClaimed: campaignAccount.claimed,
           }),
         );
 

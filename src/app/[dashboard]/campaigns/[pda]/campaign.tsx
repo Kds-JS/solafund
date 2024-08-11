@@ -33,6 +33,8 @@ export const Campaign = ({ pda }: CampaignProps) => {
           pdaAddress: pda,
           startTimestamp: campaignData.startAt.toNumber() * 1000,
           endTimestamp: campaignData.endAt.toNumber() * 1000,
+          donationCompleted: campaignData.donationCompleted,
+          isClaimed: campaignData.claimed,
         };
         setCampaign(newCampaign);
       } catch (error: any) {

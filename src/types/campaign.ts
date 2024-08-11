@@ -9,4 +9,6 @@ export interface CampaignData {
   pdaAddress: string;
   startTimestamp: number;
   endTimestamp: number;
+  donationCompleted: boolean;
+  isClaimed: boolean;
 }

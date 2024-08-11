@@ -121,6 +121,7 @@ export default function FormCreateCampaign() {
       console.log(tx);
 
       toast.success('campaign created');
+      form.reset();
     } catch (error: any) {
       toast.error(error.message);
     }
