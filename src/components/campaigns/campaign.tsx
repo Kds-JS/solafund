@@ -16,50 +16,67 @@ import {
   claimDonations,
 } from '@/services/programs';
 import { PublicKey } from '@solana/web3.js';
+import { CampaignData } from '@/types';
+import { delay } from '@/utils/delay';
+import { usePathname } from 'next/navigation';
 
 export interface CampaignDetailProps {
-  orgName: string;
-  projectTitle: string;
-  description: string;
-  raised: number;
-  goal: number;
-  imageLink: string;
-  projectLink: string;
-  pdaAddress: string;
-  startTimestamp: number;
-  endTimestamp: number;
-  isDashboard?: boolean;
+  campaign: CampaignData;
+  handleUpdateCampaign?: () => void;
 }
 
 export const CampaignDetail = ({
-  projectTitle,
-  orgName,
-  description,
-  raised,
-  goal,
-  imageLink,
-  projectLink,
-  pdaAddress,
-  startTimestamp,
-  endTimestamp,
-  isDashboard = false,
+  campaign: {
+    projectTitle,
+    orgName,
+    description,
+    raised,
+    goal,
+    imageLink,
+    projectLink,
+    pdaAddress,
+    startTimestamp,
+    endTimestamp,
+    donationCompleted,
+  },
+  handleUpdateCampaign,
 }: CampaignDetailProps) => {
+  const pathname = usePathname();
+  const isDashboard = pathname.includes('/dashboard');
+
   const raisedPercent = Math.floor((raised / goal) * 100);
+  const {
+    days: startDays,
+    hours: startHours,
+    minutes: startMinutes,
+    seconds: startSeconds,
+    end: started,
+  } = getTimeRemaining(startTimestamp);
   const { days, hours, minutes, seconds, end } = getTimeRemaining(endTimestamp);
+  const currentTime = new Date().getTime();
 
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
+
+  async function updateCampaignData() {
+    if (handleUpdateCampaign) {
+      await delay(3000);
+      handleUpdateCampaign();
+    }
+  }
 
   async function handleClaimDonations() {
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await claimDonations(program, campaign);
+        await claimDonations(program, campaign);
         toast.success('donations claimed');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -67,12 +84,14 @@ export const CampaignDetail = ({
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await cancelDonation(program, campaign, publicKey);
+        await cancelDonation(program, campaign, publicKey);
         toast.success('donation cancelled');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -80,12 +99,14 @@ export const CampaignDetail = ({
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await cancelCampaign(program, campaign);
+        await cancelCampaign(program, campaign);
         toast.success('campaign cancelled');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
+    } else {
+      toast.error('connect your wallet');
     }
   }
 
@@ -127,7 +148,9 @@ export const CampaignDetail = ({
                   <span className="text-[14px]">{raised} SOL</span>
                 </div>
 
-                <div className="flex min-w-[70px] flex-col gap-[5px] rounded-sm bg-green-500 p-1 font-semibold">
+                <div
+                  className={`flex min-w-[70px] flex-col gap-[5px] rounded-sm ${donationCompleted ? 'bg-green-500' : 'bg-blue-500'} p-1 font-semibold`}
+                >
                   <span className="text-[12px]">Goal</span>
                   <span className="text-[14px]">{goal} SOL</span>
                 </div>
@@ -136,30 +159,62 @@ export const CampaignDetail = ({
               <Progress value={raisedPercent} />
             </div>
 
-            <div className="flex items-center gap-[5px] text-[12px] font-bold">
-              <span>
-                <CalendarIcon height={20} width={20} />
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                <span>
+                  <CalendarIcon height={20} width={20} />
+                </span>
 
-              {end ? (
-                <p>Campaign End</p>
-              ) : (
-                <p>
-                  {days > 0 && (
-                    <span>
-                      {days} {days > 1 ? 'days' : 'day'}
-                    </span>
-                  )}
-                  {days <= 0 && hours > 0 && <span>{hours} hours</span>}
-                  {days <= 0 && hours <= 0 && minutes > 0 && (
-                    <span>{minutes} minutes</span>
-                  )}
-                  {days <= 0 && hours <= 0 && minutes <= 0 && seconds >= 0 && (
-                    <span>{seconds} seconds</span>
-                  )}
-                  {' left'}
-                </p>
-              )}
+                {started ? (
+                  <p>Campaign Started</p>
+                ) : (
+                  <p>
+                    {'start in '}
+                    {startDays > 0 && (
+                      <span>
+                        {startDays} {startDays > 1 ? 'days' : 'day'}
+                      </span>
+                    )}
+                    {startDays <= 0 && startHours > 0 && (
+                      <span>{startHours} hours</span>
+                    )}
+                    {startDays <= 0 && startHours <= 0 && startMinutes > 0 && (
+                      <span>{startMinutes} minutes</span>
+                    )}
+                    {startDays <= 0 &&
+                      startHours <= 0 &&
+                      startMinutes <= 0 &&
+                      startSeconds >= 0 && <span>{startSeconds} seconds</span>}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                <span>
+                  <CalendarIcon height={20} width={20} />
+                </span>
+
+                {end ? (
+                  <p>Campaign End</p>
+                ) : (
+                  <p>
+                    {days > 0 && (
+                      <span>
+                        {days} {days > 1 ? 'days' : 'day'}
+                      </span>
+                    )}
+                    {days <= 0 && hours > 0 && <span>{hours} hours</span>}
+                    {days <= 0 && hours <= 0 && minutes > 0 && (
+                      <span>{minutes} minutes</span>
+                    )}
+                    {days <= 0 &&
+                      hours <= 0 &&
+                      minutes <= 0 &&
+                      seconds >= 0 && <span>{seconds} seconds</span>}
+                    {' left'}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -173,7 +228,11 @@ export const CampaignDetail = ({
               Withdraw donation
             </Button>
 
-            <Button variant={'outline'} onClick={handleCancelCampaign}>
+            <Button
+              variant={'outline'}
+              onClick={handleCancelCampaign}
+              disabled={startTimestamp < currentTime}
+            >
               Cancel campaign
             </Button>
           </div>
@@ -185,6 +244,8 @@ export const CampaignDetail = ({
               pdaAddress={pdaAddress}
               startTimestamp={startTimestamp}
               endTimestamp={endTimestamp}
+              raisedPercent={raisedPercent}
+              handleUpdateCampaign={updateCampaignData}
             />
 
             <Button

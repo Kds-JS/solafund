@@ -73,6 +73,11 @@ export default function FormCreateCampaign() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!program || !publicKey) {
+      toast.error('connect your wallet');
+      return;
+    }
+
     const currentDate = new Date();
 
     if (values.startDate.getTime() <= currentDate.getTime()) {
@@ -107,7 +112,7 @@ export default function FormCreateCampaign() {
     const imageCID = result!.IpfsHash;
 
     try {
-      const tx = await createCampaign(program!, publicKey!, {
+      const tx = await createCampaign(program, publicKey, {
         title: values.title,
         description: values.description,
         org_name: values.orgName,
@@ -121,6 +126,7 @@ export default function FormCreateCampaign() {
       console.log(tx);
 
       toast.success('campaign created');
+      form.reset();
     } catch (error: any) {
       toast.error(error.message);
     }

@@ -9,8 +9,12 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { usePathname } from 'next/navigation';
+import { ModeToggle } from '@/components';
+import { SelectNetwork } from '@/components/admin-panel/select-network';
 
 export function SheetMenu() {
+  const pathName = usePathname();
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
@@ -31,7 +35,14 @@ export function SheetMenu() {
             </Link>
           </Button>
         </SheetHeader>
-        <Menu isOpen />
+        <div className={pathName.includes('/dashboard') ? 'block' : 'hidden'}>
+          <Menu isOpen />
+        </div>
+        <div className="grow"></div>
+        <div className="flex items-center justify-between">
+          <ModeToggle />
+          <SelectNetwork />
+        </div>
       </SheetContent>
     </Sheet>
   );

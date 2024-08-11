@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export interface CardCampaignProps {
   imageLink: string;
@@ -21,11 +22,12 @@ export const CardCampaign = ({
   raised,
   pdaAddress,
 }: CardCampaignProps) => {
+  const pathname = usePathname();
   const raisedPercent = Math.floor((raised / goal) * 100);
 
   return (
     <Link
-      href={`/dashboard/campaigns/${pdaAddress}`}
+      href={`/${pathname.includes('/dashboard') ? 'dashboard/' : ''}campaigns/${pdaAddress}`}
       className="flex flex-col gap-[15px] rounded-md border p-[10px] shadow dark:shadow-gray-800"
     >
       <div className="relative h-[200px] w-full overflow-hidden">

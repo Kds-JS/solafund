@@ -13,18 +13,12 @@ import { CampaignList } from './campaign-list';
 
 export default function CampaignsPage() {
   return (
-    <ContentLayout title="All Campaigns">
+    <ContentLayout title="Your Campaigns">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

@@ -30,12 +30,6 @@ export default function CampaignPage({ params: { pda } }: PageProps) {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
               <Link href="/dashboard/campaigns">Campaigns</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>

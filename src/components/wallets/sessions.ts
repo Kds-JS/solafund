@@ -31,8 +31,9 @@ export function useSession() {
     if (wallet) {
       const connection = new anchor.web3.Connection(
         clusterApiUrl(SolanaNetworkDictionary[selectedNetwork]),
+        { commitment: 'confirmed' },
       );
-      let provider: anchor.Provider = new anchor.AnchorProvider(
+      const provider: anchor.Provider = new anchor.AnchorProvider(
         connection,
         wallet,
         {

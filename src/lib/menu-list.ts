@@ -1,11 +1,4 @@
-import {
-  Tag,
-  Users,
-  Settings,
-  Bookmark,
-  SquarePen,
-  LayoutGrid,
-} from 'lucide-react';
+import { Tag, Bookmark, SquarePen, LayoutGrid } from 'lucide-react';
 
 type Submenu = {
   href: string;
@@ -29,18 +22,6 @@ type Group = {
 export function getMenuList(pathname: string): Group[] {
   return [
     {
-      groupLabel: '',
-      menus: [
-        {
-          href: '/dashboard',
-          label: 'Dashboard',
-          active: pathname.includes('/dashboard'),
-          icon: LayoutGrid,
-          submenus: [],
-        },
-      ],
-    },
-    {
       groupLabel: 'Contents',
       menus: [
         {
@@ -51,29 +32,15 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [
             {
               href: '/dashboard/campaigns',
-              label: 'All Campaigns',
+              label: 'Your Campaigns',
               active: pathname === '/dashboard/campaigns',
             },
             {
               href: '/dashboard/campaigns/new',
-              label: 'New Campaign',
+              label: 'Create Campaign',
               active: pathname === '/dashboard/campaigns/new',
             },
           ],
-        },
-        {
-          href: '/categories',
-          label: 'Categories',
-          active: pathname.includes('/categories'),
-          icon: Bookmark,
-          submenus: [],
-        },
-        {
-          href: '/tags',
-          label: 'Tags',
-          active: pathname.includes('/tags'),
-          icon: Tag,
-          submenus: [],
         },
       ],
     },
