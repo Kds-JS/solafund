@@ -17,7 +17,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
-  async function getCampaignList() {
+  async function getCampaign() {
     if (program && publicKey) {
       try {
         const campaignData = await program.account.campaign.fetch(pda);
@@ -26,7 +26,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
           orgName: campaignData.orgName,
           projectTitle: campaignData.title,
           description: campaignData.description,
-          raised: campaignData.totalDonated.toNumber(),
+          raised: campaignData.totalDonated.toNumber() / LAMPORTS_PER_SOL,
           goal: campaignData.goal.toNumber() / LAMPORTS_PER_SOL,
           imageLink: `${IPFS_BASE_URL}/${campaignData.projectImage}`,
           projectLink: campaignData.projectLink,
@@ -34,7 +34,6 @@ export const Campaign = ({ pda }: CampaignProps) => {
           startTimestamp: campaignData.startAt.toNumber() * 1000,
           endTimestamp: campaignData.endAt.toNumber() * 1000,
         };
-
         setCampaign(newCampaign);
       } catch (error: any) {
         setCampaign(null);
@@ -44,7 +43,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
   }
 
   useEffect(() => {
-    getCampaignList();
+    getCampaign();
   }, [program, publicKey]);
 
   return (
@@ -52,17 +51,9 @@ export const Campaign = ({ pda }: CampaignProps) => {
       <CardContent className="p-6">
         {campaign && (
           <CampaignDetail
-            isDashboard={true}
-            projectTitle={campaign.projectTitle}
-            orgName={campaign.orgName}
-            description={campaign.description}
-            raised={campaign.raised}
-            goal={campaign.goal}
-            imageLink={campaign.imageLink}
-            projectLink={campaign.projectLink}
-            pdaAddress={campaign.pdaAddress}
-            startTimestamp={campaign.startTimestamp}
-            endTimestamp={campaign.endTimestamp}
+            isDashboard={false}
+            campaign={campaign}
+            handleUpdateCampaign={getCampaign}
           />
         )}
       </CardContent>

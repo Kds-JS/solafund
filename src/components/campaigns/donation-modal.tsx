@@ -14,15 +14,18 @@ interface DonationModalProps {
   pdaAddress: string;
   startTimestamp: number;
   endTimestamp: number;
+  handleUpdateCampaign: () => void;
 }
 
 export const DonationModal = ({
   pdaAddress,
   startTimestamp,
   endTimestamp,
+  handleUpdateCampaign,
 }: DonationModalProps) => {
   const [amount, setAmount] = useState(0);
   const currentTime = new Date().getTime();
+  const ref = React.useRef();
 
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
@@ -36,9 +39,10 @@ export const DonationModal = ({
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await donate(program, campaign, publicKey, amount);
+        await donate(program, campaign, publicKey, amount);
         toast.success('donation successfull');
-        console.log(tx);
+        handleUpdateCampaign();
+        (ref as any).current?.click();
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -47,7 +51,7 @@ export const DonationModal = ({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild ref={ref as any}>
         <Button
           disabled={startTimestamp > currentTime || endTimestamp < currentTime}
         >

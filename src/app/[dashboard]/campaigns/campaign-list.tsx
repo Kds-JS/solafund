@@ -26,7 +26,7 @@ export const CampaignList = () => {
             orgName: campaignAccount.orgName,
             projectTitle: campaignAccount.title,
             description: campaignAccount.description,
-            raised: campaignAccount.totalDonated.toNumber(),
+            raised: campaignAccount.totalDonated.toNumber() / LAMPORTS_PER_SOL,
             goal: campaignAccount.goal.toNumber() / LAMPORTS_PER_SOL,
             imageLink: `${IPFS_BASE_URL}/${campaignAccount.projectImage}`,
             projectLink: campaignAccount.projectLink,

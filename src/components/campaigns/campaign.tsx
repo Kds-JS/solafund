@@ -16,47 +16,52 @@ import {
   claimDonations,
 } from '@/services/programs';
 import { PublicKey } from '@solana/web3.js';
+import { CampaignData } from '@/types';
+import { delay } from '@/utils/delay';
 
 export interface CampaignDetailProps {
-  orgName: string;
-  projectTitle: string;
-  description: string;
-  raised: number;
-  goal: number;
-  imageLink: string;
-  projectLink: string;
-  pdaAddress: string;
-  startTimestamp: number;
-  endTimestamp: number;
+  campaign: CampaignData;
   isDashboard?: boolean;
+  handleUpdateCampaign?: () => void;
 }
 
 export const CampaignDetail = ({
-  projectTitle,
-  orgName,
-  description,
-  raised,
-  goal,
-  imageLink,
-  projectLink,
-  pdaAddress,
-  startTimestamp,
-  endTimestamp,
+  campaign: {
+    projectTitle,
+    orgName,
+    description,
+    raised,
+    goal,
+    imageLink,
+    projectLink,
+    pdaAddress,
+    startTimestamp,
+    endTimestamp,
+  },
   isDashboard = false,
+  handleUpdateCampaign,
 }: CampaignDetailProps) => {
   const raisedPercent = Math.floor((raised / goal) * 100);
   const { days, hours, minutes, seconds, end } = getTimeRemaining(endTimestamp);
+  const currentTime = new Date().getTime();
 
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
+
+  async function updateCampaignData() {
+    if (handleUpdateCampaign) {
+      await delay(3000);
+      handleUpdateCampaign();
+    }
+  }
 
   async function handleClaimDonations() {
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await claimDonations(program, campaign);
+        await claimDonations(program, campaign);
         toast.success('donations claimed');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -67,9 +72,9 @@ export const CampaignDetail = ({
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await cancelDonation(program, campaign, publicKey);
+        await cancelDonation(program, campaign, publicKey);
         toast.success('donation cancelled');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -80,9 +85,9 @@ export const CampaignDetail = ({
     if (program && publicKey) {
       try {
         const campaign = new PublicKey(pdaAddress);
-        const tx = await cancelCampaign(program, campaign);
+        await cancelCampaign(program, campaign);
         toast.success('campaign cancelled');
-        console.log(tx);
+        updateCampaignData();
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -173,7 +178,7 @@ export const CampaignDetail = ({
               Withdraw donation
             </Button>
 
-            <Button variant={'outline'} onClick={handleCancelCampaign}>
+            <Button variant={'outline'} onClick={handleCancelCampaign} disabled={startTimestamp < currentTime}>
               Cancel campaign
             </Button>
           </div>
@@ -185,6 +190,7 @@ export const CampaignDetail = ({
               pdaAddress={pdaAddress}
               startTimestamp={startTimestamp}
               endTimestamp={endTimestamp}
+              handleUpdateCampaign={updateCampaignData}
             />
 
             <Button
