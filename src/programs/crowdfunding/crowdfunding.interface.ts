@@ -153,6 +153,18 @@ export type CrowdfundingProgram = {
         kind: 'struct';
         fields: [
           {
+            name: 'authority';
+            type: 'publicKey';
+          },
+          {
+            name: 'donationCompleted';
+            type: 'bool';
+          },
+          {
+            name: 'claimed';
+            type: 'bool';
+          },
+          {
             name: 'title';
             type: 'string';
           },
@@ -173,24 +185,12 @@ export type CrowdfundingProgram = {
             type: 'string';
           },
           {
-            name: 'authority';
-            type: 'publicKey';
-          },
-          {
             name: 'goal';
             type: 'u64';
           },
           {
             name: 'totalDonated';
             type: 'u64';
-          },
-          {
-            name: 'donationCompleted';
-            type: 'bool';
-          },
-          {
-            name: 'claimed';
-            type: 'bool';
           },
           {
             name: 'startAt';
@@ -209,12 +209,16 @@ export type CrowdfundingProgram = {
         kind: 'struct';
         fields: [
           {
-            name: 'amount';
-            type: 'u64';
+            name: 'campaign';
+            type: 'publicKey';
           },
           {
             name: 'authority';
             type: 'publicKey';
+          },
+          {
+            name: 'amount';
+            type: 'u64';
           },
         ];
       };
@@ -439,6 +443,18 @@ export const IDL: CrowdfundingProgram = {
         kind: 'struct',
         fields: [
           {
+            name: 'authority',
+            type: 'publicKey',
+          },
+          {
+            name: 'donationCompleted',
+            type: 'bool',
+          },
+          {
+            name: 'claimed',
+            type: 'bool',
+          },
+          {
             name: 'title',
             type: 'string',
           },
@@ -459,24 +475,12 @@ export const IDL: CrowdfundingProgram = {
             type: 'string',
           },
           {
-            name: 'authority',
-            type: 'publicKey',
-          },
-          {
             name: 'goal',
             type: 'u64',
           },
           {
             name: 'totalDonated',
             type: 'u64',
-          },
-          {
-            name: 'donationCompleted',
-            type: 'bool',
-          },
-          {
-            name: 'claimed',
-            type: 'bool',
           },
           {
             name: 'startAt',
@@ -495,12 +499,16 @@ export const IDL: CrowdfundingProgram = {
         kind: 'struct',
         fields: [
           {
-            name: 'amount',
-            type: 'u64',
+            name: 'campaign',
+            type: 'publicKey',
           },
           {
             name: 'authority',
             type: 'publicKey',
+          },
+          {
+            name: 'amount',
+            type: 'u64',
           },
         ],
       },

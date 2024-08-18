@@ -53,11 +53,7 @@ export default function HomePage() {
                 </Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link
-                  href="/campaigns"
-                >
-                  See All Campaigns
-                </Link>
+                <Link href="/campaigns">See All Campaigns</Link>
               </Button>
             </div>
           </section>

@@ -38,6 +38,7 @@ export const CampaignDetail = ({
     startTimestamp,
     endTimestamp,
     donationCompleted,
+    isClaimed,
   },
   handleUpdateCampaign,
 }: CampaignDetailProps) => {
@@ -189,32 +190,34 @@ export const CampaignDetail = ({
                 )}
               </div>
 
-              <div className="flex items-center gap-[5px] text-[12px] font-bold">
-                <span>
-                  <CalendarIcon height={20} width={20} />
-                </span>
+              {started && (
+                <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                  <span>
+                    <CalendarIcon height={20} width={20} />
+                  </span>
 
-                {end ? (
-                  <p>Campaign End</p>
-                ) : (
-                  <p>
-                    {days > 0 && (
-                      <span>
-                        {days} {days > 1 ? 'days' : 'day'}
-                      </span>
-                    )}
-                    {days <= 0 && hours > 0 && <span>{hours} hours</span>}
-                    {days <= 0 && hours <= 0 && minutes > 0 && (
-                      <span>{minutes} minutes</span>
-                    )}
-                    {days <= 0 &&
-                      hours <= 0 &&
-                      minutes <= 0 &&
-                      seconds >= 0 && <span>{seconds} seconds</span>}
-                    {' left'}
-                  </p>
-                )}
-              </div>
+                  {end ? (
+                    <p>Campaign End</p>
+                  ) : (
+                    <p>
+                      {days > 0 && (
+                        <span>
+                          {days} {days > 1 ? 'days' : 'day'}
+                        </span>
+                      )}
+                      {days <= 0 && hours > 0 && <span>{hours} hours</span>}
+                      {days <= 0 && hours <= 0 && minutes > 0 && (
+                        <span>{minutes} minutes</span>
+                      )}
+                      {days <= 0 &&
+                        hours <= 0 &&
+                        minutes <= 0 &&
+                        seconds >= 0 && <span>{seconds} seconds</span>}
+                      {' left'}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -222,10 +225,10 @@ export const CampaignDetail = ({
         {isDashboard && (
           <div className="mt-[20px] flex items-center justify-between">
             <Button
-              disabled={!end || (end && raisedPercent < 100)}
+              disabled={!end || (end && raisedPercent < 100) || isClaimed}
               onClick={handleClaimDonations}
             >
-              Withdraw donation
+              {isClaimed ? 'Donation claimed' : 'Withdraw donation'}
             </Button>
 
             <Button

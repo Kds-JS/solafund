@@ -26,6 +26,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { createCampaign } from '@/services/programs';
 import { SessionContext } from '../wallets/sessions';
 import { fileToBase64 } from '@/utils';
+import { add } from 'date-fns';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -59,6 +60,8 @@ export default function FormCreateCampaign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
+  const defautStartDate = add(new Date(), { minutes: 5 });
+  const defautEndDate = add(new Date(), { days: 1 });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -266,7 +269,10 @@ export default function FormCreateCampaign() {
                     <FormLabel>Start Date</FormLabel>
                     <FormControl>
                       <div>
-                        <DateTimePicker onUpdateDate={field.onChange} />
+                        <DateTimePicker
+                          defautDate={defautStartDate}
+                          onUpdateDate={field.onChange}
+                        />
                       </div>
                     </FormControl>
                     <FormDescription>
@@ -285,7 +291,10 @@ export default function FormCreateCampaign() {
                     <FormLabel>End Date</FormLabel>
                     <FormControl>
                       <div>
-                        <DateTimePicker onUpdateDate={field.onChange} />
+                        <DateTimePicker
+                          defautDate={defautEndDate}
+                          onUpdateDate={field.onChange}
+                        />
                       </div>
                     </FormControl>
                     <FormDescription>

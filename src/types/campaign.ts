@@ -12,3 +12,9 @@ export interface CampaignData {
   donationCompleted: boolean;
   isClaimed: boolean;
 }
+
+export interface ContributionData {
+  pdaAddress: string;
+  contributor: string;
+  amount: number;
+}

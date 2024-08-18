@@ -1,7 +1,12 @@
 'use server';
 
 import { crowdfundingProgramInstance } from '@/programs/crowdfunding';
-import { CampaignData, IPFS_BASE_URL, NetworkName } from '@/types';
+import {
+  CampaignData,
+  ContributionData,
+  IPFS_BASE_URL,
+  NetworkName,
+} from '@/types';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export async function fetchCampaignList(
@@ -53,4 +58,25 @@ export async function fetchCampaign(
     isClaimed: campaignData.claimed,
   };
   return campaign;
+}
+
+export async function fetchContributionList(
+  network: NetworkName,
+  campaignPda: string,
+): Promise<ContributionData[]> {
+  const program = await crowdfundingProgramInstance(network);
+
+  const allContributions = await program.account.contribution.all([
+    { memcmp: { offset: 8, bytes: campaignPda } },
+  ]);
+
+  const contributions: ContributionData[] = allContributions.map(
+    ({ account: contributionAccount, publicKey: pdaPublicKey }) => ({
+      amount: contributionAccount.amount.toNumber() / LAMPORTS_PER_SOL,
+      pdaAddress: pdaPublicKey.toString(),
+      contributor: contributionAccount.authority.toString(),
+    }),
+  );
+
+  return contributions;
 }
