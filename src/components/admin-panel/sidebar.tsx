@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PanelsTopLeft } from 'lucide-react';
+import { Logo } from '@/components';
 
 import { cn } from '@/lib/utils';
 import { useStore } from '@/hooks/use-store';
@@ -31,7 +31,7 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="mr-1 h-6 w-6" />
+            <Logo />
             <h1
               className={cn(
                 'whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out',
@@ -40,7 +40,7 @@ export function Sidebar() {
                   : 'translate-x-0 opacity-100',
               )}
             >
-              Brand
+              Solafund
             </h1>
           </Link>
         </Button>

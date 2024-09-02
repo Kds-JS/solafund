@@ -17,8 +17,8 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : `http://localhost:${process.env.PORT || 3000}`,
   ),
-  title: 'crowdfunding',
-  description: 'A crowd funding dapp built on Solana',
+  title: 'Solafund',
+  description: 'Decentralized Crowdfunding Platform on Solana',
 };
 
 export default function RootLayout({
