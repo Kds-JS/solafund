@@ -36,7 +36,7 @@ Solafund is a decentralized crowdfunding platform built on the Solana blockchain
 ## Technologies Used
 
 - **Blockchain**: [Solana](https://solana.com/)
-- **Smart Contract**: [Anchor](https://www.anchor-lang.com/), [Rust](https://www.rust-lang.org/)
+- **Solana Program**: [Anchor](https://www.anchor-lang.com/), [Rust](https://www.rust-lang.org/)
 - **Frontend**: [Next.js](https://nextjs.org/docs), [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting Started
