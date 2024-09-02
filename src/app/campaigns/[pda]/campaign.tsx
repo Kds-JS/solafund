@@ -2,10 +2,10 @@
 
 import React, { useContext, useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { CampaignDetail } from '@/components';
-import { CampaignData } from '@/types';
+import { CampaignDetail, Contributions } from '@/components';
+import { CampaignData, ContributionData } from '@/types';
 import { SessionContext } from '@/components/wallets/sessions';
-import { fetchCampaign } from '@/programs/crowdfunding';
+import { fetchCampaign, fetchContributionList } from '@/programs/crowdfunding';
 
 interface CampaignProps {
   pda: string;
@@ -13,12 +13,18 @@ interface CampaignProps {
 
 export const Campaign = ({ pda }: CampaignProps) => {
   const [campaign, setCampaign] = useState<CampaignData | null>(null);
+  const [contributions, setContributions] = useState<ContributionData[]>([]);
   const { selectedNetwork } = useContext(SessionContext);
 
   async function getCampaign() {
     try {
       const newCampaign = await fetchCampaign(selectedNetwork, pda);
       setCampaign(newCampaign);
+      const newContributions = await fetchContributionList(
+        selectedNetwork,
+        pda,
+      );
+      setContributions(newContributions);
     } catch (error: any) {
       setCampaign(null);
       console.log(error);
@@ -38,6 +44,7 @@ export const Campaign = ({ pda }: CampaignProps) => {
             handleUpdateCampaign={getCampaign}
           />
         )}
+        <Contributions className="mt-[36px]" contributions={contributions} />
       </CardContent>
     </Card>
   );

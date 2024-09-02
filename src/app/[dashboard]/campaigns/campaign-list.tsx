@@ -19,7 +19,9 @@ export const CampaignList = () => {
   async function getCampaignList() {
     if (program && publicKey) {
       try {
-        const allCampaigns = await program.account.campaign.all();
+        const allCampaigns = await program.account.campaign.all([
+          { memcmp: { offset: 8, bytes: publicKey.toBase58() } },
+        ]);
 
         const newCampaigns: CampaignData[] = allCampaigns.map(
           ({ account: campaignAccount, publicKey: campaignPublicKey }) => ({

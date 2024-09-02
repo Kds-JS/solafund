@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use anchor_lang::prelude::*;
 
-declare_id!("EAZShAZ2JVrBkQyvLe1eBzy26w2eoPBHgXWYkboQCyek");
+declare_id!("8UQUZ9vWrPNXRucfwmP2oVJAZoxzFVxp1HQwjKMD49MJ");
 
 #[program]
 pub mod crowdfunding {
@@ -88,6 +88,7 @@ pub mod crowdfunding {
         system_program::transfer(cpi_context, amount)?;
 
         campaign.total_donated += amount;
+        contribution.campaign = campaign.key();
         contribution.authority = ctx.accounts.signer.key();
         contribution.amount += amount;
 
@@ -229,24 +230,25 @@ pub struct CancelDonation<'info> {
 
 #[account]
 pub struct Campaign {
+    pub authority: Pubkey,
+    pub donation_completed: bool,
+    pub claimed: bool,
     pub title: String,
     pub description: String,
     pub org_name: String,
     pub project_link: String,
     pub project_image: String,
-    pub authority: Pubkey,
     pub goal: u64,
     pub total_donated: u64,
-    pub donation_completed: bool,
-    pub claimed: bool,
     pub start_at: i64,
     pub end_at: i64,
 }
 
 #[account]
 pub struct Contribution {
-    pub amount: u64,
+    pub campaign: Pubkey,
     pub authority: Pubkey,
+    pub amount: u64,
 }
 
 #[error_code]

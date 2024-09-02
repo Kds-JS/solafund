@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MenuIcon, PanelsTopLeft } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Menu } from '@/components/admin-panel/menu';
@@ -12,6 +12,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { ModeToggle } from '@/components';
 import { SelectNetwork } from '@/components/admin-panel/select-network';
+import { Logo } from '@/components';
 
 export function SheetMenu() {
   const pathName = usePathname();
@@ -30,8 +31,8 @@ export function SheetMenu() {
             asChild
           >
             <Link href="/dashboard" className="flex items-center gap-2">
-              <PanelsTopLeft className="mr-1 h-6 w-6" />
-              <h1 className="text-lg font-bold">Brand</h1>
+              <Logo />
+              <h1 className="text-lg font-bold">Solafund</h1>
             </Link>
           </Button>
         </SheetHeader>

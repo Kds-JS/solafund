@@ -15,10 +15,14 @@ import {
 import { TimePicker } from './time-picker';
 
 interface DateTimePickerProps {
+  defautDate?: Date;
   onUpdateDate: (d: Date | undefined) => void;
 }
-export function DateTimePicker({ onUpdateDate }: DateTimePickerProps) {
-  const [date, setDate] = React.useState<Date>();
+export function DateTimePicker({
+  defautDate,
+  onUpdateDate,
+}: DateTimePickerProps) {
+  const [date, setDate] = React.useState<Date | undefined>(defautDate);
 
   /**
    * carry over the current time when a user clicks a new day

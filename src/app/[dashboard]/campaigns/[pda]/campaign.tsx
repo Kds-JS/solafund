@@ -2,8 +2,8 @@
 
 import React, { useContext, useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { CampaignDetail } from '@/components';
-import { CampaignData, IPFS_BASE_URL } from '@/types';
+import { CampaignDetail, Contributions } from '@/components';
+import { CampaignData, ContributionData, IPFS_BASE_URL } from '@/types';
 import { SessionContext } from '@/components/wallets/sessions';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
@@ -14,6 +14,7 @@ interface CampaignProps {
 
 export const Campaign = ({ pda }: CampaignProps) => {
   const [campaign, setCampaign] = useState<CampaignData | null>(null);
+  const [contributions, setContributions] = useState<ContributionData[]>([]);
   const { program } = useContext(SessionContext);
   const { publicKey } = useWallet();
 
@@ -44,8 +45,26 @@ export const Campaign = ({ pda }: CampaignProps) => {
     }
   }
 
+  async function getContributionList() {
+    if (program && publicKey) {
+      const allContributions = await program.account.contribution.all([
+        { memcmp: { offset: 8, bytes: pda } },
+      ]);
+
+      const contributions: ContributionData[] = allContributions.map(
+        ({ account: contributionAccount, publicKey: pdaPublicKey }) => ({
+          amount: contributionAccount.amount.toNumber() / LAMPORTS_PER_SOL,
+          pdaAddress: pdaPublicKey.toString(),
+          contributor: contributionAccount.authority.toString(),
+        }),
+      );
+      setContributions(contributions);
+    }
+  }
+
   useEffect(() => {
     getCampaign();
+    getContributionList();
   }, [program, publicKey]);
 
   return (
@@ -57,6 +76,8 @@ export const Campaign = ({ pda }: CampaignProps) => {
             handleUpdateCampaign={getCampaign}
           />
         )}
+
+        <Contributions className="mt-[36px]" contributions={contributions} />
       </CardContent>
     </Card>
   );
