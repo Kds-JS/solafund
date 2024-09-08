@@ -27,7 +27,10 @@ export const SelectNetwork = () => {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Select Network</SelectLabel>
-          <SelectItem value={NetworkName.Mainnet}>
+          <SelectItem
+            value={NetworkName.Mainnet}
+            className="pointer-events-none opacity-30"
+          >
             {NetworkName.Mainnet}
           </SelectItem>
           <SelectItem value={NetworkName.Devnet}>

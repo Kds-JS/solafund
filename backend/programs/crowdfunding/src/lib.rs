@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use anchor_lang::prelude::*;
 
-declare_id!("8UQUZ9vWrPNXRucfwmP2oVJAZoxzFVxp1HQwjKMD49MJ");
+declare_id!("FimdP5D6JqNEsqxUv1B9tA2XceKWbEnJ3BF7NWKse4Et");
 
 #[program]
 pub mod crowdfunding {
