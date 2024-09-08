@@ -14,7 +14,7 @@ interface DonationModalProps {
   pdaAddress: string;
   startTimestamp: number;
   endTimestamp: number;
-  raisedPercent: number;
+  donationCompleted: boolean;
   handleUpdateCampaign: () => void;
 }
 
@@ -22,7 +22,7 @@ export const DonationModal = ({
   pdaAddress,
   startTimestamp,
   endTimestamp,
-  raisedPercent,
+  donationCompleted,
   handleUpdateCampaign,
 }: DonationModalProps) => {
   const [amount, setAmount] = useState(0);
@@ -59,7 +59,7 @@ export const DonationModal = ({
         <Button
           disabled={
             startTimestamp > currentTime ||
-            raisedPercent >= 100 ||
+            donationCompleted ||
             endTimestamp < currentTime
           }
         >

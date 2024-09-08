@@ -1,7 +1,11 @@
 'use client';
 
 import { getTimeRemaining } from '@/utils';
-import { CalendarIcon, ExternalLinkIcon } from '@radix-ui/react-icons';
+import {
+  CalendarIcon,
+  ExternalLinkIcon,
+  CopyIcon,
+} from '@radix-ui/react-icons';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
 import React, { useContext } from 'react';
@@ -19,6 +23,13 @@ import { PublicKey } from '@solana/web3.js';
 import { CampaignData } from '@/types';
 import { delay } from '@/utils/delay';
 import { usePathname } from 'next/navigation';
+import { CopyText } from '@/components';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export interface CampaignDetailProps {
   campaign: CampaignData;
@@ -124,7 +135,33 @@ export const CampaignDetail = ({
       </div>
 
       <div className="md:col-span-2">
-        <p className="text-[22px] font-bold">{projectTitle}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[22px] font-bold">{projectTitle}</p>
+
+          <CopyText
+            text={`${process.env.NEXT_PUBLIC_APP_URL}/campaigns/${pdaAddress}`}
+            className="cursor-pointer"
+          >
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <span className="md:hidden">
+                      <CopyIcon height={30} width={30} />
+                    </span>
+
+                    <span className="hidden md:block">
+                      <CopyIcon height={40} width={40} />
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{`Copy the project's public link to share`}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </CopyText>
+        </div>
 
         <a
           href={projectLink}
@@ -161,34 +198,38 @@ export const CampaignDetail = ({
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-[5px] text-[12px] font-bold">
-                <span>
-                  <CalendarIcon height={20} width={20} />
-                </span>
+              {!end && (
+                <div className="flex items-center gap-[5px] text-[12px] font-bold">
+                  <span>
+                    <CalendarIcon height={20} width={20} />
+                  </span>
 
-                {started ? (
-                  <p>Campaign Started</p>
-                ) : (
-                  <p>
-                    {'start in '}
-                    {startDays > 0 && (
-                      <span>
-                        {startDays} {startDays > 1 ? 'days' : 'day'}
-                      </span>
-                    )}
-                    {startDays <= 0 && startHours > 0 && (
-                      <span>{startHours} hours</span>
-                    )}
-                    {startDays <= 0 && startHours <= 0 && startMinutes > 0 && (
-                      <span>{startMinutes} minutes</span>
-                    )}
-                    {startDays <= 0 &&
-                      startHours <= 0 &&
-                      startMinutes <= 0 &&
-                      startSeconds >= 0 && <span>{startSeconds} seconds</span>}
-                  </p>
-                )}
-              </div>
+                  {started ? (
+                    <p>Campaign Started</p>
+                  ) : (
+                    <p>
+                      {'start in '}
+                      {startDays > 0 && (
+                        <span>
+                          {startDays} {startDays > 1 ? 'days' : 'day'}
+                        </span>
+                      )}
+                      {startDays <= 0 && startHours > 0 && (
+                        <span>{startHours} hours</span>
+                      )}
+                      {startDays <= 0 &&
+                        startHours <= 0 &&
+                        startMinutes > 0 && <span>{startMinutes} minutes</span>}
+                      {startDays <= 0 &&
+                        startHours <= 0 &&
+                        startMinutes <= 0 &&
+                        startSeconds >= 0 && (
+                          <span>{startSeconds} seconds</span>
+                        )}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {started && (
                 <div className="flex items-center gap-[5px] text-[12px] font-bold">
@@ -225,7 +266,7 @@ export const CampaignDetail = ({
         {isDashboard && (
           <div className="mt-[20px] flex items-center justify-between">
             <Button
-              disabled={!end || (end && raisedPercent < 100) || isClaimed}
+              disabled={!donationCompleted || isClaimed}
               onClick={handleClaimDonations}
             >
               {isClaimed ? 'Donation claimed' : 'Withdraw donation'}
@@ -247,13 +288,13 @@ export const CampaignDetail = ({
               pdaAddress={pdaAddress}
               startTimestamp={startTimestamp}
               endTimestamp={endTimestamp}
-              raisedPercent={raisedPercent}
+              donationCompleted={donationCompleted}
               handleUpdateCampaign={updateCampaignData}
             />
 
             <Button
               variant={'outline'}
-              disabled={!end || (end && raisedPercent >= 100)}
+              disabled={!end || (end && donationCompleted)}
               onClick={handleCancelDonation}
             >
               Cancel donation

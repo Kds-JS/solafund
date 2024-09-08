@@ -560,18 +560,6 @@ describe("crowdfunding", () => {
         console.log(error.error.errorMessage);
       }
     });
-
-    it("Should revert if campaign not over", async () => {
-      try {
-        await program.methods
-          .claimDonations()
-          .accounts({ campaign: campaign3, authority: wallet3.publicKey })
-          .signers([wallet3])
-          .rpc();
-      } catch (error) {
-        console.log(error.error.errorMessage);
-      }
-    });
   });
 
   describe("Cancel Donation", async () => {

@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use anchor_lang::prelude::*;
 
-declare_id!("8UQUZ9vWrPNXRucfwmP2oVJAZoxzFVxp1HQwjKMD49MJ");
+declare_id!("FimdP5D6JqNEsqxUv1B9tA2XceKWbEnJ3BF7NWKse4Et");
 
 #[program]
 pub mod crowdfunding {
@@ -124,10 +124,6 @@ pub mod crowdfunding {
     pub fn claim_donations(ctx: Context<ClaimDonations>) -> Result<()> {
         let campaign = &mut ctx.accounts.campaign;
 
-        let clock = Clock::get();
-        let current_timestamp = clock.unwrap().unix_timestamp;
-
-        require!(current_timestamp > campaign.end_at, Errors::CampaignNotOver);
         require!(campaign.donation_completed == true, Errors::DonationNotCompleted);
         require!(campaign.claimed == false, Errors::DonationsClaimed);
 
