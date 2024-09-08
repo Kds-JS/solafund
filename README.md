@@ -21,7 +21,7 @@ Solafund is a decentralized crowdfunding platform built on the Solana blockchain
 
 ### Claim Donations
 
-- Once a campaign ends and the donation goal is reached, the creator can claim the funds using the `claim_donations` function.
+- When the campaign goal has been reached, the creator can claim the funds using the `claim_donations` function.
 - The funds are transferred to the campaign creator's account, and the campaign is marked as claimed.
 
 ### Cancel Campaign
