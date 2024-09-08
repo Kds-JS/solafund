@@ -124,10 +124,6 @@ pub mod crowdfunding {
     pub fn claim_donations(ctx: Context<ClaimDonations>) -> Result<()> {
         let campaign = &mut ctx.accounts.campaign;
 
-        let clock = Clock::get();
-        let current_timestamp = clock.unwrap().unix_timestamp;
-
-        require!(current_timestamp > campaign.end_at, Errors::CampaignNotOver);
         require!(campaign.donation_completed == true, Errors::DonationNotCompleted);
         require!(campaign.claimed == false, Errors::DonationsClaimed);
 
